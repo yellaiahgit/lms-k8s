@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: api
+  template:
+    metadata:
+      labels:
+        component: api
+    spec:
+      containers:
+        - name: api
+          image: yellaiahdocker/beeeeee
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          # not putting environment variables directly
+          envFrom:
+            - configMapRef:
+                name: api-config-map
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+          
